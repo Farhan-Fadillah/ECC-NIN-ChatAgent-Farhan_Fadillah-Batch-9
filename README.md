@@ -56,6 +56,8 @@ Workflow ini dirancang untuk mengelola interaksi chatbot admin warehouse melalui
 ### 13. Send Invalid Format Message
 - Mengirim pesan peringatan jika data tidak valid atau format salah.
 
+<img width="376" height="176" alt="image" src="https://github.com/user-attachments/assets/591e51a4-64ef-40d9-9a35-527da300009a" />
+
 ---
 
 ## Ringkasan Alur Workflow
