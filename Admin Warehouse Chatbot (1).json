@@ -1,0 +1,633 @@
+{
+  "name": "Admin Warehouse Chatbot",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1680,
+        256
+      ],
+      "id": "a106791b-17aa-4627-a3a7-58da814e1b06",
+      "name": "Telegram Trigger",
+      "webhookId": "19441229-d7f8-4ebc-b9dd-9494bb3eff06",
+      "credentials": {
+        "telegramApi": {
+          "id": "9flXgvyqMoYcQJz3",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1056,
+        624
+      ],
+      "id": "3a657f4b-d540-40b6-bb71-a0a842a48d84",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "sBdhhl2tpOWwFj8k",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b14f95ac-0f3f-43f0-972e-2b8c91354c33",
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": "laporan",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1424,
+        256
+      ],
+      "id": "66fa5761-02c6-4643-8ae4-bd1146e368db",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1x5AXO1xFx4aEJiWCrUlMLIyi5TSdGQ9LgEX85H5xaAM",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1X2mUvKc80tGQ7Tkzarvblj9vWj5Nek-MmFom8sQ_be0/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "date": "={{ $json.data.date }}",
+            "type": "={{ $json.data.type }}",
+            "name": "={{ $json.data.name }}",
+            "quantity": "={{ $json.data.quantity }}",
+            "unit": "={{ $json.data.unit }}",
+            "person": "={{ $json.data.person }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "quantity",
+              "displayName": "quantity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "unit",
+              "displayName": "unit",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "person",
+              "displayName": "person",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -160,
+        432
+      ],
+      "id": "b6e50b1b-4f2c-4402-b0d8-3af0eedb2304",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "tJe1XTktGY9PPiJG",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1056,
+        240
+      ],
+      "id": "5c062b82-b79c-4c27-8b52-185a6582a0cf",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "sBdhhl2tpOWwFj8k",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Extract the following information from the user's message and return it in JSON format.",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=Extract the following report parameters from the user's message and return them in JSON format.\nKeys to extract:\n- report_type (values: \"incoming\", \"outgoing\", \"all\". Default to \"all\" if not specified)\n- report_period (values: \"this_month\", \"last_month\", \"today\", \"yesterday\", \"this_year\", \"last_year\". If a specific date like \"20 Mei 2025\" or \"May 2025\" is mentioned, convert it to a suitable machine-readable period or date range. Default to \"this_month\" if not specified)\n\nExample:\n\nUser Message: berikan saya laporan barang masuk dan keluar pada bulan ini\nJSON Output:\n{\n  \"report_type\": \"all\",\n  \"report_period\": \"this_month\"\n}\n\nUser Message: berikan laporan barang keluar bulan lalu\nJSON Output:\n{\n  \"report_type\": \"outgoing\",\n  \"report_period\": \"last_month\"\n}\n\nUser Message: berikan saya laporan barang masuk untuk tahun ini\nJSON Output:\n{\n  \"report_type\": \"incoming\",\n  \"report_period\": \"this_year\"\n}\n\nUser Message: {{ $json.message.text }}\nJSON Output:"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        -1040,
+        64
+      ],
+      "id": "52f2bdd7-20f7-4da6-8043-526fc4f62421",
+      "name": "LLM Report"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Extract the following information from the user's message and return it in JSON format.",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=Extract the following information from the user's message and return it in JSON format. Keys to extract: - date (format: YYYY-MM-DD) - type (values: \"incoming\" or \"outgoing\") - name (name of the item/material) - quantity (numeric value) - unit (unit of measurement, e.g., KG, liter, buah, etc.) - person (name of the person who received or approved)  If any information is missing or unclear, set the value to \"N/A\".  Examples:  User Message: barang masuk engine produksi dengan jumlah 2 buah diterima oleh Pak Maman pada 17 Agustus 2025 JSON Output: {   \"date\": \"2025-08-17\",   \"type\": \"incoming\",   \"name\": \"engine produksi\",   \"quantity\": 2,   \"unit\": \"buah\",   \"person\": \"Pak Maman\" }  User Message: barang keluar bahan bakar bensin dengan jumlah 5 liter disetujui oleh Bu Dewi pada 20 Mei 2025 JSON Output: {   \"date\": \"2025-05-20\",   \"type\": \"outgoing\",   \"name\": \"bahan bakar bensin\",   \"quantity\": 5,   \"unit\": \"liter\",   \"person\": \"Bu Dewi\" }  User Message: {{ $json.message.text }} JSON Output: "
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        -1040,
+        448
+      ],
+      "id": "a987bd24-5c43-4033-90cf-8dc88aedbacc",
+      "name": "LLM Append Data"
+    },
+    {
+      "parameters": {
+        "chatId": "2027665228",
+        "text": "=Pencatatan berhasil dilakukan dengan data sebagai berikut :\n\n*Tanggal transaksi* : {{ $json.date }}\n*Tipe transaksi* : {{ $json.type }}\n*Nama item* : {{ $json.name }}\n*Quanity* : {{ $json.quantity }}{{ $json.unit }}\n*Pihak yang bersangkutan* : {{ $json.person }}\n\nTerimakasih dan semangat bekerja!\n- Rul Corp",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        48,
+        432
+      ],
+      "id": "b3ed5b22-201a-452d-b7d3-d600f19b3de0",
+      "name": "Send Detail Data Added",
+      "webhookId": "cedd1bcb-d3da-4eb1-b46e-8ae0d4161f08",
+      "credentials": {
+        "telegramApi": {
+          "id": "9flXgvyqMoYcQJz3",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1x5AXO1xFx4aEJiWCrUlMLIyi5TSdGQ9LgEX85H5xaAM",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1x5AXO1xFx4aEJiWCrUlMLIyi5TSdGQ9LgEX85H5xaAM/edit#gid=0"
+        },
+        "combineFilters": "OR",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -400,
+        64
+      ],
+      "id": "2fd969fb-9835-469f-89ed-b172e77412d1",
+      "name": "Get Data",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "tJe1XTktGY9PPiJG",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const reportType = $('LLM Report').first().json.output.report_type;\nconst reportPeriod = $('LLM Report').first().json.output.report_period;\n\nlet startDate = null;\nlet endDate = null;\n\nconst today = DateTime.now();\n\nfunction parseSpecificPeriod(periodString) {\n    const yearMonthMatch = periodString.match(/^(\\d{4})-(\\d{2})$/);\n    if (yearMonthMatch) {\n        const year = parseInt(yearMonthMatch[1]);\n        const month = parseInt(yearMonthMatch[2]); \n        if (!isNaN(year) && !isNaN(month) && month >= 1 && month <= 12) {\n            const date = DateTime.fromObject({ year, month });\n            return { start: date.startOf('month'), end: date.endOf('month') };\n        }\n    }\n\n    const months = {\n        'januari': 0, 'februari': 1, 'maret': 2, 'april': 3, 'mei': 4, 'juni': 5,\n        'juli': 6, 'agustus': 7, 'september': 8, 'oktober': 9, 'november': 10, 'desember': 11,\n        'january': 0, 'february': 1, 'march': 2, 'april': 3, 'may': 4, 'june': 5,\n        'july': 6, 'august': 7, 'september': 8, 'october': 9, 'november': 10, 'december': 11\n    };\n\n    const monthNamesRegex = Object.keys(months).join('|');\n\n    const monthYearMatch = periodString.match(new RegExp(`(${monthNamesRegex})\\\\s+(\\\\d{4})`, 'i'));\n    const dayMonthYearMatch = periodString.match(new RegExp(`(\\\\d{1,2})\\\\s+(${monthNamesRegex})\\\\s+(\\\\d{4})`, 'i'));\n\n    if (dayMonthYearMatch) {\n        const day = parseInt(dayMonthYearMatch[1]);\n        const month = months[dayMonthYearMatch[2].toLowerCase()];\n        const year = parseInt(dayMonthYearMatch[3]);\n        if (!isNaN(day) && month !== undefined && !isNaN(year)) {\n            const date = DateTime.fromObject({ year, month: month + 1, day });\n            return { start: date.startOfDay(), end: date.endOfDay() };\n        }\n    } else if (monthYearMatch) {\n        const month = months[monthYearMatch[1].toLowerCase()];\n        const year = parseInt(monthYearMatch[2]);\n        if (month !== undefined && !isNaN(year)) {\n            const date = DateTime.fromObject({ year, month: month + 1 });\n            return { start: date.startOf('month'), end: date.endOf('month') };\n        }\n    } else if (periodString.toLowerCase() === 'today') {\n        return { start: today.startOfDay(), end: today.endOfDay() };\n    } else if (periodString.toLowerCase() === 'yesterday') {\n        const yesterday = today.minus({ days: 1 });\n        return { start: yesterday.startOfDay(), end: yesterday.endOfDay() };\n    }\n\n    return null;\n}\n\nconst specificPeriod = parseSpecificPeriod(reportPeriod);\n\nif (specificPeriod) {\n    startDate = specificPeriod.start;\n    endDate = specificPeriod.end;\n} else {\n    switch (reportPeriod) {\n        case 'this_month':\n            startDate = today.startOf('month');\n            endDate = today.endOf('month');\n            break;\n        case 'last_month':\n            startDate = today.minus({ months: 1 }).startOf('month');\n            endDate = today.minus({ months: 1 }).endOf('month');\n            break;\n        case 'this_year':\n            startDate = today.startOf('year');\n            endDate = today.endOf('year');\n            break;\n        case 'last_year':\n            startDate = today.minus({ years: 1 }).startOf('year');\n            endDate = today.minus({ years: 1 }).endOf('year');\n            break;\n        default: \n            startDate = today.startOf('month');\n            endDate = today.endOf('month');\n            break;\n    }\n}\n\nconst filterConditions = {\n    filterType: reportType,\n    filterStartDate: startDate ? startDate.toISODate() : null, \n    filterEndDate: endDate ? endDate.toISODate() : null,   \n};\n\nreturn [{ json: filterConditions }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -608,
+        64
+      ],
+      "id": "baf68ba6-75fd-45f4-b72d-2300ee2bc239",
+      "name": "Prepare Filter"
+    },
+    {
+      "parameters": {
+        "options": {
+          "fileName": "=Laporan"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -192,
+        48
+      ],
+      "id": "98f2194a-fabd-4534-8978-3502df94c767",
+      "name": "Create CSV"
+    },
+    {
+      "parameters": {
+        "operation": "sendDocument",
+        "chatId": "2027665228",
+        "binaryData": true,
+        "additionalFields": {
+          "caption": "={{ \"Berikut adalah laporan transaksi gudang Anda dalam format CSV untuk periode \" + $node[\"Prepare Filter\"].json.filterStartDate + \" hingga \" + $node[\"Prepare Filter\"].json.filterEndDate + \".\" }}",
+          "fileName": "={{ \"laporan Gudang \" + $node[\"Prepare Filter\"].json.filterStartDate + \" sampai \" + $node[\"Prepare Filter\"].json.filterEndDate + \".csv\" }}"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        16,
+        48
+      ],
+      "id": "b5edb27a-2807-454b-9ae0-60c4d1ea681d",
+      "name": "Send a document",
+      "webhookId": "38f245ae-1427-4442-bbd3-44dd2d0e01c6",
+      "credentials": {
+        "telegramApi": {
+          "id": "9flXgvyqMoYcQJz3",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const extractedData = $input.first().json.output;\n\nconst requiredFields = ['date', 'type', 'name', 'quantity', 'unit', 'person'];\n\nlet isValid = true;\nlet missingFields = [];\n\nfor (const field of requiredFields) {\n    if (!extractedData[field] || extractedData[field] === 'N/A' || extractedData[field] === null || String(extractedData[field]).trim() === '') {\n        isValid = false;\n        missingFields.push(field);\n    }\n\n    if (field === 'quantity' && isValid) { \n        const quantity = Number(extractedData.quantity);\n        if (isNaN(quantity) || quantity <= 0) {\n            isValid = false;\n            missingFields.push('quantity_numeric_positive');\n        }\n    }\n}\n\nif (isValid) {\n    return [{ json: { isValid: true, data: extractedData } }];\n} else {\n    return [{ json: { isValid: false, missingFields: missingFields, originalMessage: $('Telegram Trigger').first().json.message.text } }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -592,
+        448
+      ],
+      "id": "a751ac77-5238-4256-bbea-d2fb2a16edf0",
+      "name": "Validate Data"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b9aa07fa-5ada-43af-a220-566b93871e87",
+              "leftValue": "={{ $json.isValid }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -384,
+        448
+      ],
+      "id": "038083f0-a953-4c4c-bf3c-d7c57dc234c7",
+      "name": "Is data valid ?"
+    },
+    {
+      "parameters": {
+        "chatId": "2027665228",
+        "text": "=Maaf. penambahan data gagal dilakukan karena format pesan tidak sesuai, harap gunakan format pesan yang sesuai seperti di bawah ini :\n{tipe transaksi (barang masuk/barang keluar)} {nama barang} dengan jumlah {jumlah barang} {satuan} pada {tanggal bulan tahun transaksi} {person (diterima/disetujui oleh)}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        64,
+        592
+      ],
+      "id": "c8aa7f95-05ae-47da-94f3-45b998c561aa",
+      "name": "Send Invalid Format Message",
+      "webhookId": "cedd1bcb-d3da-4eb1-b46e-8ae0d4161f08",
+      "credentials": {
+        "telegramApi": {
+          "id": "9flXgvyqMoYcQJz3",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"report_type\": \"all\",\n  \"report_period\": \"this_month\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -912,
+        240
+      ],
+      "id": "860007c2-7820-46de-a1df-a82c6df64a99",
+      "name": "Output LLM Report"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"date\": \"2025-05-20\",\n  \"type\": \"outgoing\",\n  \"name\": \"bahan bakar bensin\",\n  \"quantity\": 5,\n  \"unit\": \"liter\",\n  \"person\": \"Bu Dewi\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -928,
+        608
+      ],
+      "id": "86ea8156-6bf9-4c2e-99ca-6548f3b8e60b",
+      "name": "Output LLM Append"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "LLM Append Data",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "LLM Report",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "LLM Append Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send Detail Data Added",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "LLM Report",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM Append Data": {
+      "main": [
+        [
+          {
+            "node": "Validate Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM Report": {
+      "main": [
+        [
+          {
+            "node": "Prepare Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Data": {
+      "main": [
+        [
+          {
+            "node": "Create CSV",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Filter": {
+      "main": [
+        [
+          {
+            "node": "Get Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create CSV": {
+      "main": [
+        [
+          {
+            "node": "Send a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Data": {
+      "main": [
+        [
+          {
+            "node": "Is data valid ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is data valid ?": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Invalid Format Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Output LLM Report": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "LLM Report",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Output LLM Append": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "LLM Append Data",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5cf07c42-82d2-4578-b52d-05fa60030e61",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7234231b329e7a8919605c9f7c01a89c2d434f457372b75ec992c93aff0ba2fe"
+  },
+  "id": "WWUWk04mWMvohVjj",
+  "tags": []
+}
